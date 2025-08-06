@@ -2420,7 +2420,6 @@ class AccountDashboard {
    "SalesforceID": "0016g00000A1BCdEFA",
    "DropNotes": "Placeholder"
 }
-]
         ];
         
         this.filteredAccounts = [...this.accounts];

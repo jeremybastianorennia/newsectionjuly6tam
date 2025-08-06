@@ -83,67 +83,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Results Section -->
-        <section class="results-section">
-            <div class="card">
-                <div class="card__body">
-                    <div class="results-header">
-                        <h2>Account Results</h2>
-                        <div class="loading-indicator hidden" id="loadingIndicator">
-                            <span>Loading...</span>
-                        </div>
-                        <div class="results-count" id="resultsCount">0 accounts found</div>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table" id="accountsTable">
-                            <thead class="table-header">
-                                <tr>
-                                    <th class="sortable" data-column="Company Name">
-                                        Company Name
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                    <th class="sortable" data-column="Assigned To">
-                                        Assigned To
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                    <th class="sortable" data-column="Account Type">
-                                        Account Type
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                    <th class="sortable" data-column="Prospect Score">
-                                        Prospect Score
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                    <th>Account Notes</th>
-                                    <th>Drop Notes</th>
-                                    <th>Website</th>
-                                    <th>LinkedIn</th>
-                                    <th class="sortable" data-column="Revenue Estimate">
-                                        Revenue
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                    <th class="sortable" data-column="Employees">
-                                        Employees
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                    <th>Head Office</th>
-                                    <th>Country</th>
-                                    <th class="sortable" data-column="Segmentation">
-                                        Segmentation
-                                        <span class="sort-arrow"></span>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="accountsTableBody">
-                                <!-- Table rows will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Account Details Section -->
         <section class="account-details-section hidden" id="accountDetailsSection">
             <div class="account-selector-container">
@@ -202,6 +141,65 @@
                                 <div class="info-value mono-text" id="salesforceId"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="card">
+                <div class="card__body">
+                    <div class="results-header">
+                        <h2>Account Results</h2>
+                        <div class="loading-indicator hidden" id="loadingIndicator">
+                            <span>Loading...</span>
+                        </div>
+                        <div class="results-count" id="resultsCount">0 accounts found</div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="accountsTable">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="sortable" data-column="Company Name">
+                                        Company Name
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Assigned To">
+                                        Assigned To
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Account Type">
+                                        Account Type
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Prospect Score">
+                                        Prospect Score
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th>Account Notes</th>
+                                    <th>Drop Notes</th>
+                                    <th>Website</th>
+                                    <th>LinkedIn</th>
+                                    <th class="sortable" data-column="Revenue Estimate">
+                                        Revenue
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Employees">
+                                        Employees
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th>Head Office</th>
+                                    <th>Country</th>
+                                    <th class="sortable" data-column="Segmentation">
+                                        Segmentation
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="accountsTableBody">
+                                <!-- Table rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

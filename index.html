@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoomInfo Account Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>ZoomInfo Account Dashboard</h1>
+            <p class="subtitle">Advanced filtering and analytics for B2B prospect management</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="card">
+                <div class="card__body">
+                    <h2>Filters</h2>
+                    <div class="filters-grid">
+                        <!-- Revenue Range Filter -->
+                        <div class="filter-group">
+                            <label class="form-label">Revenue Range</label>
+                            <select id="revenueFilter" class="form-control" multiple>
+                                <option value="Under $500,000">Under $500,000</option>
+                                <option value="$500,000-$1M">$500,000-$1M</option>
+                                <option value="$1M-$5M">$1M-$5M</option>
+                                <option value="$5M-$10M">$5M-$10M</option>
+                                <option value="$10 mil. - $25 mil.">$10M-$25M</option>
+                                <option value="$25 mil. - $50 mil.">$25M-$50M</option>
+                                <option value="$50 mil. - $100 mil.">$50M-$100M</option>
+                                <option value="$100 mil. - $250 mil.">$100M-$250M</option>
+                                <option value="$250 mil. - $500 mil.">$250M-$500M</option>
+                                <option value="$500M-$1B">$500M-$1B</option>
+                                <option value="Over $5B">Over $5B</option>
+                            </select>
+                        </div>
+
+                        <!-- Employee Count Filter -->
+                        <div class="filter-group">
+                            <label class="form-label">Employee Count</label>
+                            <div class="employee-range">
+                                <input type="number" id="minEmployees" class="form-control" placeholder="Min">
+                                <span>to</span>
+                                <input type="number" id="maxEmployees" class="form-control" placeholder="Max">
+                            </div>
+                        </div>
+
+                        <!-- Segmentation Filter -->
+                        <div class="filter-group">
+                            <label class="form-label">Segmentation</label>
+                            <select id="segmentationFilter" class="form-control" multiple>
+                                <option value="Enterprise">Enterprise</option>
+                                <option value="Mid-Market">Mid-Market</option>
+                                <option value="SMB">SMB</option>
+                            </select>
+                        </div>
+
+                        <!-- Assigned To Filter -->
+                        <div class="filter-group">
+                            <label class="form-label">Assigned To</label>
+                            <select id="assignedToFilter" class="form-control" multiple>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+
+                        <!-- Search Box -->
+                        <div class="filter-group search-group">
+                            <label class="form-label">Search</label>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search companies...">
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="filter-actions">
+                            <button id="clearFilters" class="btn btn--secondary">Clear Filters</button>
+                            <button id="exportData" class="btn btn--primary">Export Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="card">
+                <div class="card__body">
+                    <div class="results-header">
+                        <h2>Account Results</h2>
+                        <div class="loading-indicator hidden" id="loadingIndicator">
+                            <span>Loading...</span>
+                        </div>
+                        <div class="results-count" id="resultsCount">0 accounts found</div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="accountsTable">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="sortable" data-column="Company Name">
+                                        Company Name
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Assigned To">
+                                        Assigned To
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Account Type">
+                                        Account Type
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Prospect Score">
+                                        Prospect Score
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th>Account Notes</th>
+                                    <th>Drop Notes</th>
+                                    <th>Website</th>
+                                    <th>LinkedIn</th>
+                                    <th class="sortable" data-column="Revenue Estimate">
+                                        Revenue
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th class="sortable" data-column="Employees">
+                                        Employees
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                    <th>Head Office</th>
+                                    <th>Country</th>
+                                    <th class="sortable" data-column="Segmentation">
+                                        Segmentation
+                                        <span class="sort-arrow"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="accountsTableBody">
+                                <!-- Table rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Details Section -->
+        <section class="account-details-section hidden" id="accountDetailsSection">
+            <div class="account-selector-container">
+                <div class="card">
+                    <div class="card__body">
+                        <label class="form-label" for="accountSelector">Select Account for Details</label>
+                        <select id="accountSelector" class="form-control">
+                            <option value="">Choose an account...</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-details-cards" id="accountDetailsCards">
+                <div class="details-grid">
+                    <!-- Scoring Card -->
+                    <div class="card scoring-card">
+                        <div class="card__body">
+                            <h3>Scoring</h3>
+                            <div class="score-item">
+                                <label>Activity Score</label>
+                                <div class="score-bar-container">
+                                    <div class="score-bar">
+                                        <div class="score-fill" id="activityScoreFill"></div>
+                                    </div>
+                                    <span class="score-value" id="activityScoreValue">0/10</span>
+                                </div>
+                            </div>
+                            <div class="score-item">
+                                <label>Generation Score</label>
+                                <div class="score-bar-container">
+                                    <div class="score-bar">
+                                        <div class="score-fill" id="generationScoreFill"></div>
+                                    </div>
+                                    <span class="score-value" id="generationScoreValue">0/10</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Information Card -->
+                    <div class="card info-card">
+                        <div class="card__body">
+                            <h3>Account Information</h3>
+                            <div class="info-item">
+                                <label>Account Notes</label>
+                                <div class="info-value mono-text" id="accountNotes"></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Drop Notes</label>
+                                <div class="info-value mono-text" id="dropNotes"></div>
+                            </div>
+                            <div class="info-item">
+                                <label>Salesforce ID</label>
+                                <div class="info-value mono-text" id="salesforceId"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

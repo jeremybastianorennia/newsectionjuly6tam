@@ -19,7 +19,7 @@ class AccountDashboard {
     loadData() {
         // Load accounts data from the provided JSON
         this.accounts = [
-           [
+           
  {
    "Company Name": "Vanguard Innovations",
    "Assigned To": "Jordan Green",

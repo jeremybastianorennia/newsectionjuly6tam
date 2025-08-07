@@ -1,4 +1,4 @@
-// ZoomInfo Account Dashboard JavaScript
+// ZoomInfo Account Dashboard JavaScript with Password Protection
 
 class AccountDashboard {
     constructor() {
@@ -6,14 +6,272 @@ class AccountDashboard {
         this.filteredAccounts = [];
         this.currentSort = { column: null, direction: 'asc' };
         this.searchTimeout = null;
+        this.isAuthenticated = false;
         
         this.init();
     }
     
     init() {
+        this.checkAuthentication();
+        this.setupLoginEventListeners();
+    }
+    
+    checkAuthentication() {
+        // Check if user is already authenticated (stored in session)
+        const isLoggedIn = sessionStorage.getItem('dashboardAuth') === 'true';
+        
+        if (isLoggedIn) {
+            this.isAuthenticated = true;
+            this.showDashboard();
+        } else {
+            this.showLogin();
+        }
+    }
+    
+    showLogin() {
+        // Create login screen if it doesn't exist
+        if (!document.getElementById('loginScreen')) {
+            this.createLoginScreen();
+        }
+        
+        document.getElementById('loginScreen').style.display = 'flex';
+        if (document.getElementById('dashboardContainer')) {
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+    }
+    
+    createLoginScreen() {
+        const loginHTML = `
+            <div id="loginScreen" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                z-index: 1000;
+            ">
+                <div style="
+                    background: white;
+                    padding: 40px;
+                    border-radius: 12px;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    text-align: center;
+                    min-width: 300px;
+                ">
+                    <div style="
+                        width: 60px;
+                        height: 60px;
+                        background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+                        border-radius: 50%;
+                        margin: 0 auto 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 24px;
+                        color: white;
+                    ">🔥</div>
+                    <h2 style="margin: 0 0 10px 0; color: #333;">ZoomInfo Dashboard</h2>
+                    <p style="margin: 0 0 30px 0; color: #666;">Enter password to continue</p>
+                    
+                    <div style="position: relative; margin-bottom: 20px;">
+                        <input 
+                            type="password" 
+                            id="passwordInput" 
+                            placeholder="Enter password"
+                            style="
+                                width: 100%;
+                                padding: 12px 16px;
+                                border: 2px solid #e1e5e9;
+                                border-radius: 6px;
+                                font-size: 16px;
+                                box-sizing: border-box;
+                                outline: none;
+                                transition: border-color 0.3s;
+                            "
+                        />
+                    </div>
+                    
+                    <button 
+                        id="loginButton"
+                        style="
+                            width: 100%;
+                            padding: 12px;
+                            background: linear-gradient(135deg, #667eea, #764ba2);
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 16px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: transform 0.2s, box-shadow 0.2s;
+                        "
+                    >Access Dashboard</button>
+                    
+                    <div id="loginError" style="
+                        color: #ff6b6b;
+                        margin-top: 15px;
+                        font-size: 14px;
+                        display: none;
+                    ">Incorrect password. Please try again.</div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', loginHTML);
+    }
+    
+    setupLoginEventListeners() {
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'loginButton') {
+                this.attemptLogin();
+            }
+        });
+        
+        document.addEventListener('keypress', (e) => {
+            if (e.target && e.target.id === 'passwordInput' && e.key === 'Enter') {
+                this.attemptLogin();
+            }
+        });
+        
+        // Add focus styles to password input
+        document.addEventListener('focus', (e) => {
+            if (e.target && e.target.id === 'passwordInput') {
+                e.target.style.borderColor = '#667eea';
+            }
+        }, true);
+        
+        document.addEventListener('blur', (e) => {
+            if (e.target && e.target.id === 'passwordInput') {
+                e.target.style.borderColor = '#e1e5e9';
+            }
+        }, true);
+    }
+    
+    attemptLogin() {
+        const passwordInput = document.getElementById('passwordInput');
+        const loginError = document.getElementById('loginError');
+        const loginButton = document.getElementById('loginButton');
+        
+        const enteredPassword = passwordInput.value;
+        const correctPassword = 'flames';
+        
+        // Add loading state to button
+        loginButton.textContent = 'Checking...';
+        loginButton.disabled = true;
+        
+        // Simulate slight delay for better UX
+        setTimeout(() => {
+            if (enteredPassword === correctPassword) {
+                // Successful login
+                this.isAuthenticated = true;
+                sessionStorage.setItem('dashboardAuth', 'true');
+                loginError.style.display = 'none';
+                
+                // Add success animation
+                loginButton.textContent = '✓ Access Granted';
+                loginButton.style.background = 'linear-gradient(135deg, #51cf66, #40c057)';
+                
+                setTimeout(() => {
+                    this.showDashboard();
+                }, 500);
+                
+            } else {
+                // Failed login
+                loginError.style.display = 'block';
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Reset button
+                loginButton.textContent = 'Access Dashboard';
+                loginButton.disabled = false;
+                
+                // Add shake animation to error
+                loginError.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginError.style.animation = '';
+                }, 500);
+            }
+        }, 800);
+    }
+    
+    showDashboard() {
+        // Hide login screen
+        const loginScreen = document.getElementById('loginScreen');
+        if (loginScreen) {
+            loginScreen.style.display = 'none';
+        }
+        
+        // Show dashboard container
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        if (dashboardContainer) {
+            dashboardContainer.style.display = 'block';
+        }
+        
+        // Add logout functionality
+        this.addLogoutButton();
+        
+        // Initialize dashboard functionality
         this.loadData();
         this.setupEventListeners();
         this.populateFilters();
+    }
+    
+    addLogoutButton() {
+        // Check if logout button already exists
+        if (document.getElementById('logoutButton')) return;
+        
+        const logoutButton = document.createElement('button');
+        logoutButton.id = 'logoutButton';
+        logoutButton.textContent = 'Logout';
+        logoutButton.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 999;
+            transition: background-color 0.3s;
+        `;
+        
+        logoutButton.addEventListener('click', () => this.logout());
+        logoutButton.addEventListener('mouseover', () => {
+            logoutButton.style.backgroundColor = '#c82333';
+        });
+        logoutButton.addEventListener('mouseout', () => {
+            logoutButton.style.backgroundColor = '#dc3545';
+        });
+        
+        document.body.appendChild(logoutButton);
+    }
+    
+    logout() {
+        sessionStorage.removeItem('dashboardAuth');
+        this.isAuthenticated = false;
+        
+        // Remove logout button
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.remove();
+        }
+        
+        // Show login screen
+        this.showLogin();
+        
+        // Clear password field
+        const passwordInput = document.getElementById('passwordInput');
+        if (passwordInput) {
+            passwordInput.value = '';
+        }
     }
     
     loadData() {
@@ -365,3 +623,17 @@ class AccountDashboard {
 document.addEventListener('DOMContentLoaded', () => {
     new AccountDashboard();
 });
+
+// Add CSS for shake animation
+const shakeCSS = `
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+`;
+
+// Insert the CSS
+const styleSheet = document.createElement('style');
+styleSheet.textContent = shakeCSS;
+document.head.appendChild(styleSheet);
